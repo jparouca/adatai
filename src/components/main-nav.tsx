@@ -28,7 +28,7 @@ export function MainNav() {
             pathname === "/docs" ? "text-foreground" : "text-foreground/60"
           )}
         >
-          Adatai
+          Home
         </Link>
         <Link
           href="/docs/components"

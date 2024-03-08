@@ -6,6 +6,7 @@ import { buttonVariants } from './ui/button'
 import { Icons } from './icons'
 import { ModeToggle } from './theme-toggle'
 import { MainNav } from './main-nav'
+import { CommandMenu } from './command-menu'
 
 export default function Header() {
   return (
@@ -15,7 +16,7 @@ export default function Header() {
 
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
           <div className="w-full flex-1 md:w-auto md:flex-none">
-            <div>command menu</div>
+            <CommandMenu />
           </div>
         </div>
         <nav className="flex items-center">
