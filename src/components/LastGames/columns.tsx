@@ -8,6 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 import Image from "next/image"
@@ -33,12 +34,17 @@ export const columns: ColumnDef<LastFive>[] = [
   {
     accessorKey: "blueTeam",
     header: "Blue Team Name",
-    cell: async ({ row }) => {
+    cell: ({ row }) => {
+      return (
+        <div>
+          <Avatar>
+            <AvatarImage src={`https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/${row.original.blueTeamPicks[0]}.png`} alt="" width={50} height={50} />
+            <AvatarFallback>{row.original.redTeamPicks[0].slice(3)}</AvatarFallback>
 
-      const championSquare = await fetch(`https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/${row.original.}`)
-
-      return <div><Image src={championSquare} /></div >;
-    }
+          </Avatar>
+        </div >
+      )
+    },
   },
   {
     accessorKey: "date",
