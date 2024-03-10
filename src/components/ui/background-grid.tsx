@@ -1,5 +1,6 @@
+import Image from "next/image";
 import { Button } from "./button";
-
+import heimer from "@/assets/heimer.png"
 export function Hero() {
   return (
     <div className="h-svh w-full bg-white dark:bg-[hsl(257.14,24.14%,5.69%)] dark:bg-grid-small-white/[0.2] bg-grid-small-black/[0.2] relative flex items-center justify-center">

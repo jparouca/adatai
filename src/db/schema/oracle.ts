@@ -1,6 +1,6 @@
 import { text, sqliteTable } from "drizzle-orm/sqlite-core";
 
-export const oracle = sqliteTable('oracle_table', {
+export const oracle = sqliteTable('table', {
   gameid: text('gameid'),
   datacompleteness: text('datacompleteness'),
   url: text('url'),

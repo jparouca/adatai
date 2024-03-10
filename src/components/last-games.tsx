@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -7,8 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Tabs,
   TabsContent,
@@ -16,41 +13,76 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 import { TOURNAMENTS } from "@/config/constants"
+import { LastFive, columns } from "./LastGames/columns"
+import { DataTable } from "./LastGames/data-table"
+import { db } from "@/db"
+import { oracle } from "@/db/schema/oracle"
+import { and, desc, sql } from "drizzle-orm"
 
-export function LastGames() {
+
+async function getData(): Promise<LastFive[]> {
+  const lastFive = await db.selectDistinct({ gameid: oracle.gameid }).from(oracle).orderBy(desc(oracle.date)).limit(5)
+
+  const lastFiveData = [];
+  for (const { gameid } of lastFive) {
+    const blueTeamPicks = await db.select({ champion: oracle.champion, teamname: oracle.teamname, date: oracle.date }).from(oracle)
+      .where(
+        and(
+          sql`${oracle.gameid} =  ${gameid}`,
+          sql`${oracle.side} = 'Blue'`
+        ))
+
+    const redTeamPicks = await db.select({ champion: oracle.champion, teamname: oracle.teamname }).from(oracle)
+      .where(
+        and(
+          sql`${oracle.gameid} =  ${gameid}`,
+          sql`${oracle.side} = 'Red'`
+        ))
+
+    lastFiveData.push({
+      date: blueTeamPicks[0]!.date,
+      gameid: gameid,
+      blueTeam: blueTeamPicks[0].teamname,
+      redTeam: redTeamPicks[0].teamname,
+      blueTeamPicks: blueTeamPicks.map(player => player.champion),
+      redTeamPicks: redTeamPicks.map(player => player.champion),
+    });
+  }
+
+  return lastFiveData;
+}
+
+export async function LastGames() {
+  const data = await getData()
+
   return (
-    <Tabs defaultValue="account" className="mt-10">
-      <TabsList className="grid w-full grid-cols-10">
+    <>
+      <Tabs defaultValue="account" className="mt-10 h-svh">
+        <TabsList className="grid w-full grid-cols-10">
+          {TOURNAMENTS.map((tournament) => (
+            <TabsTrigger value={tournament.toString().toLowerCase()} className="data-[state=active]:text-primary">{tournament}</TabsTrigger>
+          ))}
+        </TabsList>
         {TOURNAMENTS.map((tournament) => (
-          <TabsTrigger value={tournament.toString().toLowerCase()} className="data-[state=active]:text-primary">{tournament}</TabsTrigger>
-        ))}
-      </TabsList>
-      {TOURNAMENTS.map((tournament) => (
 
-        <TabsContent value={tournament.toString().toLowerCase()}>
-          <Card>
-            <CardHeader>
-              <CardTitle>{tournament}</CardTitle>
-              <CardDescription>
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="space-y-1">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" defaultValue="Pedro Duarte" />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="username">Username</Label>
-                <Input id="username" defaultValue="@peduarte" />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button>Save changes</Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-      ))}
-    </Tabs >
+          <TabsContent value={tournament.toString().toLowerCase()}>
+            <Card>
+              <CardHeader>
+                <CardTitle>{tournament}</CardTitle>
+                <CardDescription>
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <DataTable columns={columns} data={data} />
+              </CardContent>
+              <CardFooter>
+              </CardFooter>
+            </Card>
+          </TabsContent>
+        ))}
+      </Tabs >
+
+    </>
   )
 }
 
