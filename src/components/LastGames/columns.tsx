@@ -26,39 +26,48 @@ export type LastFive = {
 export const columns: ColumnDef<LastFive>[] = [
   {
     accessorKey: "blueTeamPicks",
-    header: "Blue Team Picks",
-    cell: ({ row }) => {
-      return <div>{row.original.blueTeamPicks.join(", ")}</div>;
-    },
-  },
-  {
-    accessorKey: "blueTeam",
-    header: "Blue Team Name",
+    header: "",
     cell: ({ row }) => {
       return (
-        <div>
-          <Avatar>
-            <AvatarImage src={`https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/${row.original.blueTeamPicks[0]}.png`} alt="" width={50} height={50} />
-            <AvatarFallback>{row.original.redTeamPicks[0].slice(3)}</AvatarFallback>
-
-          </Avatar>
-        </div >
+        <div className="flex space-x-2">
+          {row.original.blueTeamPicks.map((champion) => (
+            <Avatar>
+              <AvatarImage src={`https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/${champion}.png`} alt="" width={50} height={50} />
+              <AvatarFallback>{champion}</AvatarFallback>
+            </Avatar>
+          ))}
+        </div>
       )
     },
   },
   {
     accessorKey: "date",
-    header: "Date",
-  },
-  {
-    accessorKey: "redTeam",
-    header: "Red Team Name",
+    header: "",
+    cell: ({ row }) => {
+      const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        const month = date.toLocaleString('default', { month: 'short' }).toUpperCase();
+        const day = date.getDate();
+        return `${month} ${day}`;
+      }
+      return <div className="flex">{formatDate(row.original.date)}</div>
+    },
   },
   {
     accessorKey: "redTeamPicks",
-    header: "Red Team Picks",
+    header: "",
+
     cell: ({ row }) => {
-      return <div>{row.original.redTeamPicks.join(", ")}</div>;
+      return (
+        <div className="flex space-x-2">
+          {row.original.redTeamPicks.map((champion) => (
+            <Avatar>
+              <AvatarImage src={`https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/${champion}.png`} alt="" width={50} height={50} />
+              <AvatarFallback>{champion}</AvatarFallback>
+            </Avatar>
+          ))}
+        </div>
+      )
     },
   },
 ];

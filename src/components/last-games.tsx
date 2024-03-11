@@ -81,7 +81,6 @@ export async function LastGames() {
           </TabsContent>
         ))}
       </Tabs >
-
     </>
   )
 }
