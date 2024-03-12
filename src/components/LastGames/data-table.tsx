@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/table"
 import React from "react"
 import { Input } from "../ui/input"
+import { Button } from "../ui/button"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -32,7 +33,6 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
 
-  const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
@@ -44,7 +44,6 @@ export function DataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
-      sorting,
       columnFilters,
     },
   })
@@ -105,6 +104,24 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
+      </div>
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          &lt;
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          &gt;
+        </Button>
       </div>
     </div>
   )

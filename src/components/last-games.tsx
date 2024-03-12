@@ -21,7 +21,7 @@ import { and, desc, sql } from "drizzle-orm"
 
 
 async function getData(): Promise<LastFive[]> {
-  const lastFive = await db.selectDistinct({ gameid: oracle.gameid }).from(oracle).orderBy(desc(oracle.date)).limit(5)
+  const lastFive = await db.selectDistinct({ gameid: oracle.gameid }).from(oracle).orderBy(desc(oracle.date)).limit(100)
 
   const lastFiveData = [];
   for (const { gameid } of lastFive) {
