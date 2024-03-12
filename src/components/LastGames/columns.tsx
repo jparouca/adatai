@@ -11,9 +11,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
-import Image from "next/image"
 
 export type LastFive = {
+  league: string;
   gameid: string;
   date: string;
   blueTeamPicks: string[];
@@ -67,6 +67,33 @@ export const columns: ColumnDef<LastFive>[] = [
             </Avatar>
           ))}
         </div>
+      )
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const lastfive = row.original
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">...</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(lastfive.gameid)}
+            >
+              Copy Game ID
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>View players</DropdownMenuItem>
+            <DropdownMenuItem>View match details</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       )
     },
   },

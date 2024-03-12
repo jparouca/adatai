@@ -40,7 +40,7 @@ async function getData(): Promise<LastFive[]> {
         ))
 
     lastFiveData.push({
-      date: blueTeamPicks[0]!.date,
+      date: blueTeamPicks[0].date,
       gameid: gameid,
       blueTeam: blueTeamPicks[0].teamname,
       redTeam: redTeamPicks[0].teamname,
